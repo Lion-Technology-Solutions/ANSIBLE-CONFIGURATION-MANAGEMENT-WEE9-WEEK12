@@ -1,0 +1,14 @@
+users:
+  - username: alice
+    password: "$6$hash1"
+    group: devops
+    admin: true
+    pub_key: "files/keys/alice.pub"
+    is_admin: true
+
+  - username: bob
+    password: "$6$hash2"
+    group: developers
+    admin: false
+    pub_key: "files/keys/bob.pub"
+    is_admin: false

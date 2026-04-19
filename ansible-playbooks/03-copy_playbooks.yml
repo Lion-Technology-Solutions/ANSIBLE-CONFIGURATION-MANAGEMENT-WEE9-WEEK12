@@ -1,0 +1,26 @@
+---
+- name: Create ansible-week10 directory and copy playbooks
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create ansible-week10 directory
+      file:
+        path: /opt/ansible-week10
+        state: directory
+        mode: '0755'
+
+    - name: Copy playbooks to remote directory
+      copy:
+        src: "{{ item }}"
+        dest: /opt/ansible-week10/
+        mode: '0444'
+      loop:
+        - 01-install_packages.yml
+        - 02-install_apache_rhel.yml
+
+    - name: Set read-only permissions on all files in ansible-week10
+      file:
+        path: /opt/ansible-week10
+        mode: '0444'
+        state: directory
+        recurse: yes

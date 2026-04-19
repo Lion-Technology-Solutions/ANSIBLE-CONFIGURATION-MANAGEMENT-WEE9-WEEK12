@@ -1,0 +1,11 @@
+---
+- name: Test connections on all remote hosts
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Ping all remote hosts
+      ping:
+
+    - name: Display host information
+      debug:
+        msg: "Host {{ inventory_hostname }} is reachable. OS: {{ ansible_os_family }}, Distribution: {{ ansible_distribution }}"

@@ -1,0 +1,56 @@
+---
+- name: Create finance group and users with password authentication
+  hosts: all
+  become: yes
+  vars:
+    finance_users:
+      - { username: 'prof', uid: 2000 }
+      - { username: 'finance_user2', uid: 2001 }
+      - { username: 'finance_user3', uid: 2002 }
+      - { username: 'finance_user4', uid: 2003 }
+      - { username: 'finance_user5', uid: 2004 }
+      - { username: 'finance_user6', uid: 2005 }
+      - { username: 'finance_user7', uid: 2006 }
+      - { username: 'finance_user8', uid: 2007 }
+      - { username: 'finance_user9', uid: 2008 }
+      - { username: 'finance_user10', uid: 2009 }
+
+  tasks:
+    - name: Create finance group
+      group:
+        name: finance
+        state: present
+
+    - name: Create finance users with unique UIDs
+      user:
+        name: "{{ item.username }}"
+        uid: "{{ item.uid }}"
+        group: finance
+        shell: /bin/bash
+        password: "{{ 'Finance@123' | password_hash('sha512') }}"
+        state: present
+      loop: "{{ finance_users }}"
+
+    - name: Force password change on first login
+      command: "chage -d 0 {{ item.username }}"
+      loop: "{{ finance_users }}"
+
+    - name: Enable password authentication in SSH config (if PasswordAuthentication is disabled)
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PasswordAuthentication'
+        line: 'PasswordAuthentication yes'
+        state: present
+      notify: Restart SSH service   #hander 
+
+    - name: Ensure SSH service is started and enabled
+      systemd:
+        name: sshd
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart SSH service
+      systemd:
+        name: sshd
+        state: restarted
