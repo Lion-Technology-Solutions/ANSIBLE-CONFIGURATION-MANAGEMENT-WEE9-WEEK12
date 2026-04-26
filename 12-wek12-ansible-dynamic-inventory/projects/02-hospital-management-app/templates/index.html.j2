@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LionTech Hotel Booking</title>
+    <style>
+        body { font-family: Arial; background: #0a1f44; color: white; text-align: center; }
+        header { padding: 20px; }
+        .slider img { width: 80%; height: 300px; }
+        .room { border: 1px solid white; margin: 10px; padding: 10px; }
+        button { padding: 10px; background: red; color: white; border: none; }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏨 LionTech Hotel Booking System</h1>
+    <p>Welcome from {{ ansible_distribution }}</p>
+</header>
+
+<!-- IMAGE SLIDER -->
+<div class="slider">
+    <img src="https://source.unsplash.com/800x300/?hotel" />
+</div>
+
+<!-- ROOMS -->
+<h2>Available Rooms</h2>
+
+<div class="room">
+    <h3>Standard Room</h3>
+    <p>Price: <span id="price1"></span></p>
+    <button onclick="bookRoom('Standard')">Book Now</button>
+</div>
+
+<div class="room">
+    <h3>Deluxe Room</h3>
+    <p>Price: <span id="price2"></span></p>
+    <button onclick="bookRoom('Deluxe')">Book Now</button>
+</div>
+
+<script>
+    // Currency detection
+    let currency = "USD";
+    let symbol = "$";
+
+    if (navigator.language.includes("en-GB")) {
+        currency = "GBP"; symbol = "£";
+    } else if (navigator.language.includes("fr")) {
+        currency = "EUR"; symbol = "€";
+    }
+
+    document.getElementById("price1").innerText = symbol + "100";
+    document.getElementById("price2").innerText = symbol + "200";
+
+    // Booking system
+    function bookRoom(type) {
+        let reservation = "RES-" + Math.floor(Math.random() * 100000);
+        alert("Booking Confirmed!\nRoom: " + type + "\nReservation: " + reservation);
+    }
+</script>
+
+</body>
+</html>

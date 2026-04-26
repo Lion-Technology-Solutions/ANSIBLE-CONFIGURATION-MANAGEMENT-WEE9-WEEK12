@@ -1,0 +1,47 @@
+# Default variables for user-management role
+# Users will be defined per host/inventory
+
+users: []
+#  - username: john.doe
+#    uid: 1001
+#    group: developers
+#    password: "$6$rounds=656000$..." # encrypted password hash
+#    public_keys:
+#      - "ssh-rsa AAAB3NzaC1yc2E..."
+#    is_admin: false
+#    joined_date: "2024-01-15"
+#    shell: "/bin/bash"
+#
+#  - username: jane.smith
+#    uid: 1002
+#    group: admins
+#    password: "$6$rounds=656000$..."
+#    public_keys:
+#      - "ssh-rsa AAAB3NzaC1yc2E..."
+#    is_admin: true
+#    joined_date: "2024-01-10"
+#    shell: "/bin/bash"
+
+# Teams (secondary groups) to create
+teams: []
+#  - name: developers
+#    gid: 2001
+#  - name: admins
+#    gid: 2002
+#  - name: devops
+#    gid: 2003
+
+# SSH key directory location
+ssh_key_dir: "/etc/ssh/authorized_keys"
+
+# User home directory prefix
+user_home_prefix: "/home"
+
+# Default shell for new users
+default_shell: "/bin/bash"
+
+# Create home directories
+create_home: true
+
+# Create user log directory for tracking metadata
+user_metadata_dir: "/var/lib/user-metadata"

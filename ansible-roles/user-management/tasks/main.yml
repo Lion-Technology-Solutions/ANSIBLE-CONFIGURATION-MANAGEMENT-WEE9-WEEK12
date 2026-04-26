@@ -1,0 +1,32 @@
+# 🔹 Create groups
+- name: Ensure groups exist
+  group:
+    name: "{{ item.group }}"
+    state: present
+  loop: "{{ users }}"
+
+# 🔹 Create users
+- name: Create users
+  user:
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+    group: "{{ item.group }}"
+    create_home: yes
+    shell: /bin/bash
+  loop: "{{ users }}"
+
+# 🔹 Assign admin privileges (conditional)
+- name: Add admin users to sudo group
+  user:
+    name: "{{ item.username }}"
+    groups: sudo
+    append: yes
+  when: item.admin | bool
+  loop: "{{ users }}"
+
+# 🔹 Deploy SSH keys
+- name: Add SSH public keys
+  authorized_key:
+    user: "{{ item.username }}"
+    key: "{{ lookup('file', item.pub_key) }}"
+  loop: "{{ users }}"

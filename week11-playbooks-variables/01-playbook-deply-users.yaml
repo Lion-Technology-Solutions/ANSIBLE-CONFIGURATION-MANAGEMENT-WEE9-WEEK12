@@ -1,5 +1,5 @@
 - name: Deploy Users with SSH Access
-  hosts: all
+  hosts: aws_ec2
   become: yes
 
   vars_files:

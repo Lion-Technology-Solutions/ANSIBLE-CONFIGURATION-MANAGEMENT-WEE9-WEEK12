@@ -1,0 +1,13 @@
+{
+  "username": "{{ item.username }}",
+  "uid": {{ item.uid | default(-1) }},
+  "group": "{{ item.group | default('users') }}",
+  "team": "{{ item.team | default(item.group) | default('N/A') }}",
+  "joined_date": "{{ item.joined_date | default('Unknown') }}",
+  "is_admin": {{ item.is_admin | default(false) | lower }},
+  "shell": "{{ item.shell | default(default_shell) }}",
+  "home_dir": "{{ item.home_dir | default(user_home_prefix + '/' + item.username) }}",
+  "ssh_keys_count": {{ item.public_keys | default([]) | length }},
+  "deployed_at": "{{ ansible_date_time.iso8601 }}",
+  "deployed_by": "{{ ansible_user_id }}"
+}

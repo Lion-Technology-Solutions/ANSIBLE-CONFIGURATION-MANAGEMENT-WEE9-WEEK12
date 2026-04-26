@@ -1,0 +1,51 @@
+---
+- name: Deploy Application Based on OS
+  hosts: all
+  become: yes
+
+  tasks:
+
+    # -------------------------------
+    # UBUNTU SYSTEMS → NGINX
+    # -------------------------------
+    - name: Install NGINX on Ubuntu
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Start NGINX
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Deploy HTML to NGINX
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+      when: ansible_os_family == "Debian"
+
+    # -------------------------------
+    # REDHAT / AMAZON LINUX → APACHE
+    # -------------------------------
+    - name: Install Apache on RedHat/Amazon
+      yum:
+        name: httpd
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Start Apache
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Deploy HTML to Apache
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+      when: ansible_os_family == "RedHat"

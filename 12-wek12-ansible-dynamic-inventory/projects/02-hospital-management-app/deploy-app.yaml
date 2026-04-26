@@ -1,0 +1,51 @@
+---
+- name: Deploy Booking System
+  hosts: all
+  become: yes
+
+  tasks:
+
+    # -------------------------------
+    # UBUNTU → NGINX
+    # -------------------------------
+    - name: Install NGINX
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Start NGINX
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Deploy App to NGINX
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+      when: ansible_os_family == "Debian"
+
+    # -------------------------------
+    # AMAZON LINUX / REDHAT → APACHE
+    # -------------------------------
+    - name: Install Apache
+      yum:
+        name: httpd
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Start Apache
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Deploy App to Apache
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+      when: ansible_os_family == "RedHat"

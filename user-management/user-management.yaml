@@ -1,5 +1,5 @@
 - name: User Management with Conditions and Variables
-  hosts: all
+  hosts: aws_ec2
   become: yes
 
   vars_files:

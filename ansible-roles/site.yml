@@ -1,0 +1,10 @@
+- name: User Management Deployment
+  hosts: all
+  become: yes
+
+  vars_files:
+    - vars/users.yml
+
+  roles:
+    - user-
+    management
