@@ -1,6 +1,6 @@
 ---
 - name: Install Git, Nginx, and Apache on Ubuntu
-  hosts: db
+  hosts: all
   become: yes
   tasks:
     - name: Update apt package cache

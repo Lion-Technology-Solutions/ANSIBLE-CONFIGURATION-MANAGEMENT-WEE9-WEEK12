@@ -1,0 +1,80 @@
+---
+- name: Deploy user admin with SSH access and sudo privileges
+  hosts: all
+  become: yes
+
+  vars:
+    username: admin
+    ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIPpmMU6qaJWg08Yz6Mk5Ek+pQ5DNwpqMcLuzTReiRlK liontech@LION-TECHNOLOGY-SOLUTIONS"
+
+  tasks:
+
+    # -------------------------------
+    # CREATE USER
+    # -------------------------------
+    - name: Create user admin
+      user:
+        name: "{{ username }}"
+        shell: /bin/bash
+        create_home: yes
+
+    # -------------------------------
+    # SET PASSWORD (OPTIONAL)
+    # -------------------------------
+    - name: Set password for admin
+      user:
+        name: "{{ username }}"
+        password: "{{ 'Pa$$word123' | password_hash('sha512') }}"
+
+    # -------------------------------
+    # ADD USER TO SUDO GROUP
+    # -------------------------------
+    - name: Add user to sudo group (Ubuntu/Debian)
+      user:
+        name: "{{ username }}"
+        groups: sudo
+        append: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Add user to wheel group (RedHat/Amazon)
+      user:
+        name: "{{ username }}"
+        groups: wheel
+        append: yes
+      when: ansible_os_family == "RedHat"
+
+    # -------------------------------
+    # CREATE .SSH DIRECTORY
+    # -------------------------------
+    - name: Create .ssh directory
+      file:
+        path: "/home/{{ username }}/.ssh"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0700'
+
+    # -------------------------------
+    # ADD AUTHORIZED KEY
+    # -------------------------------
+    - name: Add SSH public key
+      authorized_key:
+        user: "{{ username }}"
+        key: "{{ ssh_key }}"
+
+    # -------------------------------
+    # SET PERMISSIONS
+    # -------------------------------
+    - name: Set correct permissions on .ssh
+      file:
+        path: "/home/{{ username }}/.ssh"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0700'
+
+    - name: Set permissions on authorized_keys
+      file:
+        path: "/home/{{ username }}/.ssh/authorized_keys"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0600'
