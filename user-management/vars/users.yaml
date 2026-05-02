@@ -1,14 +1,27 @@
 users:
-  - username: alice
+  - username: kargbo
     password: "$6$hash1"
     group: devops
     admin: true
-    pub_key: "files/keys/alice.pub"
+    pub_key: "../files/keys/kargbo.pub"
     is_admin: true
+    emp_id: "EMP001"
+    department: "DevOps"
 
-  - username: bob
+  - username: hassan
     password: "$6$hash2"
     group: developers
     admin: false
-    pub_key: "files/keys/bob.pub"
+    pub_key: "../files/keys/hassan.pub"
     is_admin: false
+    emp_id: "EMP002"
+    department: "Development"
+
+  - username: shekahkargbo
+    password: "$6$hash3"
+    group: developers
+    admin: false
+    pub_key: "../files/keys/shekahkargbo.pub"
+    is_admin: false
+    emp_id: "EMP003"
+    department: "Development"

@@ -1,0 +1,32 @@
+- name: Deploy Users with SSH Access
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Load user variables
+      include_vars:
+        file: /home/sheka/Terraform-ansible-project/user-management/vars/users.yaml
+
+    - name: Create users
+      user:
+        name: "{{ item.username }}"
+        password: "{{ item.password }}"
+        create_home: yes
+        shell: /bin/bash
+      loop: "{{ users }}"  # scale on all the users
+
+    - name: Set user info (employee ID & department)
+      copy:
+        content: |
+          Employee ID: {{ item.emp_id }}
+          Department: {{ item.department }}
+        dest: "/home/{{ item.username }}/info.txt"
+        owner: "{{ item.username }}"
+        mode: '0644'
+      loop: "{{ users }}"
+
+    - name: Add SSH public keys
+      authorized_key:
+        user: "{{ item.username }}"
+        key: "{{ lookup('file', item.pub_key) }}"
+      loop: "{{ users }}"
